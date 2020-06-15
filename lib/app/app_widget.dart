@@ -5,11 +5,15 @@ class AppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: Modular.navigatorKey,
       title: 'Portfolio',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        primaryColorBrightness: Brightness.dark,
+      ),
       initialRoute: '/',
+      navigatorKey: Modular.navigatorKey,
       onGenerateRoute: Modular.generateRoute,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
