@@ -1,5 +1,5 @@
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:portfolio/app/modules/post/post_controller.dart';
 
 class PostScreen extends StatefulWidget {
@@ -14,7 +14,12 @@ class _PostScreenState extends ModularState<PostScreen, PostController> {
       appBar: AppBar(
         title: Text('Posts'),
         centerTitle: true,
-        actions: [],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home),
+            onPressed: () => Modular.to.pushNamed('/home'),
+          )
+        ],
       ),
       body: Center(
         child: ListView.builder(
@@ -23,7 +28,6 @@ class _PostScreenState extends ModularState<PostScreen, PostController> {
             return ListTile(
               title: Text('Post $index'),
               subtitle: Text('Description $index'),
-              onTap: () => null,
             );
           },
         ),

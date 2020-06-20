@@ -24,6 +24,21 @@ mixin _$HomeController on _HomeControllerStore, Store {
     });
   }
 
+  final _$currentIndexAtom = Atom(name: '_HomeControllerStore.currentIndex');
+
+  @override
+  int get currentIndex {
+    _$currentIndexAtom.reportRead();
+    return super.currentIndex;
+  }
+
+  @override
+  set currentIndex(int value) {
+    _$currentIndexAtom.reportWrite(value, super.currentIndex, () {
+      super.currentIndex = value;
+    });
+  }
+
   final _$refreshAsyncAction = AsyncAction('_HomeControllerStore.refresh');
 
   @override
@@ -48,7 +63,8 @@ mixin _$HomeController on _HomeControllerStore, Store {
   @override
   String toString() {
     return '''
-postList: ${postList}
+postList: ${postList},
+currentIndex: ${currentIndex}
     ''';
   }
 }

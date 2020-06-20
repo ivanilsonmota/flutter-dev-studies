@@ -18,6 +18,9 @@ abstract class _HomeControllerStore with Store {
   @observable
   List<PostModel> postList;
 
+  @observable
+  int currentIndex = 0;
+
   @action
   getData() {
     postRepository.fetchPost().then((data) {

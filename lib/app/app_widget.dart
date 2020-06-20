@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -7,6 +8,7 @@ class AppWidget extends StatelessWidget {
     return MaterialApp(
       title: 'Portfolio',
       theme: ThemeData(
+        primaryColor: Colors.green[300],
         primarySwatch: Colors.blue,
         primaryColorBrightness: Brightness.dark,
       ),

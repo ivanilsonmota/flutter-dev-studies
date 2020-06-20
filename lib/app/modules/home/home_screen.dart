@@ -26,36 +26,12 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeController> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home Screen'),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Theme.of(context).primaryColor,
         actions: [],
       ),
-      body: Stack(children: [
-        Container(
-          color: Colors.grey[300],
-        ),
-        Container(
-          color: Colors.white24,
-          //height: MediaQuery.of(context).size.height * 0.50,
-          child: _postsListBuider(),
-        ),
-      ]),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            title: Text('Home'),
-            icon: Icon(Icons.home),
-          ),
-          BottomNavigationBarItem(
-            title: Text('Notifications'),
-            icon: Icon(
-              Icons.notification_important,
-            ),
-          ),
-          BottomNavigationBarItem(
-            title: Text('Profile'),
-            icon: Icon(Icons.home),
-          ),
-        ],
+      body: Container(
+        //height: MediaQuery.of(context).size.height * 0.50,
+        child: _postsListBuider(),
       ),
     );
   }
@@ -66,27 +42,21 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeController> {
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(
               scrollDirection: Axis.vertical,
-              padding: EdgeInsets.all(10.0),
               itemCount: controller.postList.length,
               itemBuilder: (context, index) {
                 return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 2.0),
-                      //width: MediaQuery.of(context).size.width * 0.62,
-                      child: RaisedButton(
-                        color: Colors.amber,
-                        child: Container(
-                          child: Center(
-                            child: ListTile(
-                              title: Text(
-                                '${controller.postList[index].title}',
-                              ),
-                            ),
+                    RaisedButton(
+                      child: Container(
+                        child: ListTile(
+                          onTap: () => Modular.to.pushNamed('/post'),
+                          title: Text(
+                            '${controller.postList[index].title}',
                           ),
                         ),
-                        onPressed: () {},
                       ),
+                      onPressed: () {},
                     ),
                   ],
                 );

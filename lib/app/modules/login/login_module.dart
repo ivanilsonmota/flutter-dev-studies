@@ -1,4 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
+
 import 'login_controller.dart';
 import 'login_screen.dart';
 
@@ -10,7 +11,11 @@ class LoginModule extends ChildModule {
 
   @override
   List<Router> get routers => [
-        Router(Modular.initialRoute, child: (_, args) => LoginScreen()),
+        Router(
+          Modular.initialRoute,
+          child: (_, args) => LoginScreen(),
+          transition: TransitionType.scale,
+        ),
       ];
 
   static Inject get to => Inject<LoginModule>.of();

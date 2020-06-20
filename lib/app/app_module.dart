@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_controller.dart';
 import 'modules/home/home_module.dart';
+import 'modules/login/register/register_module.dart';
 import 'modules/post/post_module.dart';
 
 class AppModule extends MainModule {
@@ -19,11 +20,13 @@ class AppModule extends MainModule {
 
   @override
   List<Bind> get binds => [
+        //  Bind((i) => LocalStorageHive()),
         Bind((i) => AppController()),
         Bind((i) => LoginController()),
         Bind((i) => HomeController(i.get<PostRepository>())),
         Bind((i) => PostRepository(Dio(), AppModule.to.get())),
-        Bind((i) => sharedPreferences)
+        //Bind<IAuthRepository>((i) => AuthRepository()),
+        Bind((i) => sharedPreferences),
       ];
 
   @override
@@ -32,6 +35,8 @@ class AppModule extends MainModule {
         Router(Modular.initialRoute, module: LoginModule()),
         Router('/home', module: HomeModule()),
         Router('/post', module: PostModule()),
+        Router('/register',
+            module: RegisterModule(), transition: TransitionType.downToUp)
       ];
 
   @override
