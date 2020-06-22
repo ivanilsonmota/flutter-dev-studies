@@ -12,6 +12,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
+        android:configChanges="keyboardHidden|orientation|screenSize"
         android:label="portfolio"
         android:icon="@mipmap/ic_launcher">
         <activity

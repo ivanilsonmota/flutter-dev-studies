@@ -8,8 +8,7 @@ class RegisterController = _RegisterControllerBase with _$RegisterController;
 
 abstract class _RegisterControllerBase with Store {
   _RegisterControllerBase() {
-    userModel =
-        UserModel(name: userName, email: userEmail, password: userPassword);
+    userModel = UserModel(name: userName, email: userEmail, password: userPassword);
   }
 
   @observable
@@ -50,4 +49,21 @@ abstract class _RegisterControllerBase with Store {
 
   @action
   setPassowod(val) => userPassword = val;
+
+  @action
+  String nameValidator(String value) => value.length < 6 ? "Senha inválida. Deve conter ao menos 6 caracteres!" : null;
+
+  @action
+  String emailValidator(String value) {
+    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value)) {
+      return 'Digite um e-mail válido!';
+    } else {
+      return null;
+    }
+  }
+
+  @action
+  String passwordValidator(String value) => value.length < 6 ? "Senha inválida. Deve conter ao menos 6 caracteres!" : null;
 }

@@ -12,10 +12,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends ModularState<HomeScreen, HomeController> {
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.black,
-        statusBarIconBrightness: Brightness.light));
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.black, statusBarIconBrightness: Brightness.light));
 
     print(controller.getData());
     super.initState();
@@ -37,31 +35,33 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeController> {
   }
 
   Widget _postsListBuider() {
-    return Observer(builder: (_) {
-      return controller.postList == null
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: controller.postList.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    RaisedButton(
-                      child: Container(
-                        child: ListTile(
-                          onTap: () => Modular.to.pushNamed('/post'),
-                          title: Text(
-                            '${controller.postList[index].title}',
+    return Observer(
+      builder: (_) {
+        return controller.postList == null
+            ? Center(child: CircularProgressIndicator())
+            : ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: controller.postList.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      RaisedButton(
+                        child: Container(
+                          child: ListTile(
+                            onTap: () => Modular.to.pushNamed('/post'),
+                            title: Text(
+                              '${controller.postList[index].title}',
+                            ),
                           ),
                         ),
+                        onPressed: () {},
                       ),
-                      onPressed: () {},
-                    ),
-                  ],
-                );
-              },
-            );
-    });
+                    ],
+                  );
+                },
+              );
+      },
+    );
   }
 }

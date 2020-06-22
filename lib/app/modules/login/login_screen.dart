@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:portfolio/app/modules/login/login_controller.dart';
+import 'package:portfolio/app/widgets/custom_button_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -11,14 +12,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends ModularState<LoginScreen, LoginController> {
   final _keyScaffold = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    if (controller.loggedIn) {
-      Modular.to.pushNamed('/home');
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +47,7 @@ class _LoginScreenState extends ModularState<LoginScreen, LoginController> {
                   keyboardType: TextInputType.text,
                   onChanged: (val) => controller.setEmail(val),
                   enabled: !controller.loading,
-                  validator: (text) {
-                    if (text.isEmpty != !text.contains('@'))
-                      return "E-mail inválido!";
-                  },
+                  validator: (val) => controller.emailValidator(val),
                 );
               }),
               SizedBox(height: 16.0),
@@ -70,12 +60,33 @@ class _LoginScreenState extends ModularState<LoginScreen, LoginController> {
                   keyboardType: TextInputType.text,
                   onChanged: (val) => controller.setPassword(val),
                   enabled: !controller.loading,
+                  validator: controller.passwordValidator,
                 );
               }),
               SizedBox(height: 16.0),
               Observer(
-                builder: (_) {
-                  return _signInButton();
+                builder: (BuildContext ctx) {
+                  return CustomButton(
+                    text: 'Entrar',
+                    onTab: () {
+                      if (_formKey.currentState.validate()) {
+                        controller.loading = true;
+                        Modular.to.pushNamed('/home');
+                      } else {
+                        Scaffold.of(ctx).showSnackBar(
+                          SnackBar(
+                            duration: Duration(seconds: 2),
+                            content: Text("Email e/ou senha inválida  !"),
+                            action: SnackBarAction(
+                              onPressed: () => Modular.to.pushReplacementNamed('/'),
+                              label: '',
+                            ),
+                            backgroundColor: Colors.red[300],
+                          ),
+                        );
+                      }
+                    },
+                  );
                 },
               ),
               SizedBox(height: 16.0),
@@ -83,8 +94,7 @@ class _LoginScreenState extends ModularState<LoginScreen, LoginController> {
                 child: InkWell(
                   child: Text(
                     'Registrar',
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                   onTap: () => Modular.to.pushReplacementNamed('/register'),
                 ),
@@ -93,61 +103,6 @@ class _LoginScreenState extends ModularState<LoginScreen, LoginController> {
           ),
         ),
       ),
-    );
-  }
-
-  _loginErrorDialog() {
-    return showDialog(
-      context: context,
-      child: AlertDialog(
-        title: Text('Erro'),
-        content: Text('E-mail e/ou senha inválida'),
-        actionsPadding: EdgeInsets.all(20.0),
-        actions: [
-          RaisedButton(
-            child: Text('OK'),
-            animationDuration: Duration(seconds: 2),
-            onPressed: () => Modular.to.pushNamed('/'),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(32),
-            ),
-            color: Theme.of(context).primaryColor,
-            disabledColor: Theme.of(context).primaryColor.withAlpha(100),
-            textColor: Colors.white,
-          ),
-        ],
-      ),
-    );
-  }
-
-  _signInButton() {
-    return InkWell(
-      child: ButtonTheme(
-        minWidth: 370.0,
-        height: 50.0,
-        child: Container(
-          width: 370.0,
-          height: 50.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(32),
-            color: Theme.of(context).primaryColor,
-          ),
-          child: controller.loading
-              ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(
-                    Colors.white,
-                  ),
-                )
-              : Center(
-                  child: Text('Login'),
-                ),
-        ),
-      ),
-      onTap: () {
-        if (_formKey.currentState.validate()) {}
-        Modular.to.pushNamed('/home');
-        //return _loginErrorDialog();
-      },
     );
   }
 }

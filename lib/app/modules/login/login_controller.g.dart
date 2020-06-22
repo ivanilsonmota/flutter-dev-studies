@@ -161,6 +161,28 @@ mixin _$LoginController on _LoginControllerStore, Store {
   }
 
   @override
+  String emailValidator(String value) {
+    final _$actionInfo = _$_LoginControllerStoreActionController.startAction(
+        name: '_LoginControllerStore.emailValidator');
+    try {
+      return super.emailValidator(value);
+    } finally {
+      _$_LoginControllerStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  String passwordValidator(String value) {
+    final _$actionInfo = _$_LoginControllerStoreActionController.startAction(
+        name: '_LoginControllerStore.passwordValidator');
+    try {
+      return super.passwordValidator(value);
+    } finally {
+      _$_LoginControllerStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 email: ${email},

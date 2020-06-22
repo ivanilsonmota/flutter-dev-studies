@@ -196,6 +196,39 @@ mixin _$RegisterController on _RegisterControllerBase, Store {
   }
 
   @override
+  String nameValidator(String value) {
+    final _$actionInfo = _$_RegisterControllerBaseActionController.startAction(
+        name: '_RegisterControllerBase.nameValidator');
+    try {
+      return super.nameValidator(value);
+    } finally {
+      _$_RegisterControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  String emailValidator(String value) {
+    final _$actionInfo = _$_RegisterControllerBaseActionController.startAction(
+        name: '_RegisterControllerBase.emailValidator');
+    try {
+      return super.emailValidator(value);
+    } finally {
+      _$_RegisterControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  String passwordValidator(String value) {
+    final _$actionInfo = _$_RegisterControllerBaseActionController.startAction(
+        name: '_RegisterControllerBase.passwordValidator');
+    try {
+      return super.passwordValidator(value);
+    } finally {
+      _$_RegisterControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 userModel: ${userModel},

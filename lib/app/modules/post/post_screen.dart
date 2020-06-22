@@ -3,6 +3,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:portfolio/app/modules/post/post_controller.dart';
 
 class PostScreen extends StatefulWidget {
+  PostScreen({Key key}) : super(key: key);
+
   @override
   _PostScreenState createState() => _PostScreenState();
 }
@@ -21,7 +23,8 @@ class _PostScreenState extends ModularState<PostScreen, PostController> {
           )
         ],
       ),
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.all(10.0),
         child: ListView.builder(
           itemCount: 20,
           itemBuilder: (context, index) {
