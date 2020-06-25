@@ -11,14 +11,16 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends ModularState<RegisterScreen, RegisterController> {
   final _formValidatorKey = GlobalKey<FormState>();
+  final _keyScaffold = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     // final _screenWidth = MediaQuery.of(context).size.width;
     // final _screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      key: _keyScaffold,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         actions: [],
       ),
       body: SingleChildScrollView(
@@ -61,10 +63,6 @@ class _RegisterScreenState extends ModularState<RegisterScreen, RegisterControll
                     TextFormField(
                       controller: controller.passwordController,
                       decoration: InputDecoration(
-                        suffix: InkWell(
-                          child: Text('Esqueci minha senha'),
-                          onTap: () => Modular.to.pushReplacementNamed('/'),
-                        ),
                         hintText: 'Password',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.0),
@@ -82,27 +80,10 @@ class _RegisterScreenState extends ModularState<RegisterScreen, RegisterControll
                       height: 44.0,
                       child: CustomButton(
                         text: 'Registrar',
-                        onTab: () {
+                        onTab: () async {
                           if (_formValidatorKey.currentState.validate()) {
-                            Modular.to.pushReplacementNamed('/');
-
-                            Scaffold.of(ctx).showSnackBar(
-                              SnackBar(
-                                content: Text('Dados incorretos. Verifique e tente novamente!'),
-                                duration: Duration(seconds: 2),
-                                elevation: 0,
-                                backgroundColor: Colors.red[300],
-                              ),
-                            );
-                          } else {
-                            Scaffold.of(ctx).showSnackBar(
-                              SnackBar(
-                                content: Text('Dados incorretos. Verifique e tente novamente!'),
-                                duration: Duration(seconds: 2),
-                                elevation: 0,
-                                backgroundColor: Colors.red[300],
-                              ),
-                            );
+                            await controller.auth
+                                .signUp(email: controller.emailController.text.trim(), password: controller.passwordController.text.trim(), onSuccess: _onSuccess, onFail: _onFail);
                           }
                         },
                       ),
@@ -113,6 +94,28 @@ class _RegisterScreenState extends ModularState<RegisterScreen, RegisterControll
             );
           },
         ),
+      ),
+    );
+  }
+
+  _onSuccess() {
+    Future.delayed(Duration(seconds: 3)).then((_) {
+      _keyScaffold.currentState.showSnackBar(SnackBar(
+        content: Text('Registro efetuado com sucesso!'),
+        duration: Duration(seconds: 3),
+        elevation: 0,
+      ));
+      Modular.to.pushReplacementNamed('/');
+    });
+  }
+
+  _onFail() {
+    _keyScaffold.currentState.showSnackBar(
+      SnackBar(
+        content: Text('E-mail informado já utilizado!'),
+        duration: Duration(seconds: 2),
+        elevation: 0,
+        backgroundColor: Colors.red[300],
       ),
     );
   }

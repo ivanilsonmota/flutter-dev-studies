@@ -25,7 +25,12 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeController> {
       appBar: AppBar(
         title: Text('Home Screen'),
         backgroundColor: Theme.of(context).primaryColor,
-        actions: [],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.home),
+            onPressed: () => Modular.to.pushNamed('/'),
+          )
+        ],
       ),
       body: Container(
         //height: MediaQuery.of(context).size.height * 0.50,

@@ -14,7 +14,6 @@ class LoginModule extends ChildModule {
         Router(
           Modular.initialRoute,
           child: (_, args) => LoginScreen(),
-          transition: TransitionType.scale,
         ),
       ];
 

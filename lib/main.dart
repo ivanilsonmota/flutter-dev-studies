@@ -8,6 +8,4 @@ void main() async {
   var shared = await SharedPreferences.getInstance();
 
   runApp(ModularApp(module: AppModule(shared)));
-
-  //print(Firestore.instance.collection("products").document().setData({"id": 2, "name": "Marcio", "email": "marcio@gmail.com", "password": "131334"}));
 }

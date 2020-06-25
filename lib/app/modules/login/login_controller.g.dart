@@ -172,6 +172,17 @@ mixin _$LoginController on _LoginControllerStore, Store {
   }
 
   @override
+  bool sendEmail(String email) {
+    final _$actionInfo = _$_LoginControllerStoreActionController.startAction(
+        name: '_LoginControllerStore.sendEmail');
+    try {
+      return super.sendEmail(email);
+    } finally {
+      _$_LoginControllerStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String passwordValidator(String value) {
     final _$actionInfo = _$_LoginControllerStoreActionController.startAction(
         name: '_LoginControllerStore.passwordValidator');

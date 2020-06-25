@@ -10,8 +10,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends ModularState<LoginScreen, LoginController> {
-  final _keyScaffold = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
+  final _keyScaffold = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -35,73 +35,138 @@ class _LoginScreenState extends ModularState<LoginScreen, LoginController> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: ListView(
-            children: [
-              SizedBox(height: 16.0),
-              Observer(builder: (_) {
-                return TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'E-mail',
-                  ),
-                  controller: controller.emailController,
-                  keyboardType: TextInputType.text,
-                  onChanged: (val) => controller.setEmail(val),
-                  enabled: !controller.loading,
-                  validator: (val) => controller.emailValidator(val),
-                );
-              }),
-              SizedBox(height: 16.0),
-              Observer(builder: (_) {
-                return TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Senha',
-                  ),
-                  controller: controller.passwordController,
-                  keyboardType: TextInputType.text,
-                  onChanged: (val) => controller.setPassword(val),
-                  enabled: !controller.loading,
-                  validator: controller.passwordValidator,
-                );
-              }),
-              SizedBox(height: 16.0),
-              Observer(
-                builder: (BuildContext ctx) {
-                  return CustomButton(
-                    text: 'Entrar',
-                    onTab: () {
-                      if (_formKey.currentState.validate()) {
-                        controller.loading = true;
-                        Modular.to.pushNamed('/home');
-                      } else {
-                        Scaffold.of(ctx).showSnackBar(
-                          SnackBar(
-                            duration: Duration(seconds: 2),
-                            content: Text("Email e/ou senha inválida  !"),
-                            action: SnackBarAction(
-                              onPressed: () => Modular.to.pushReplacementNamed('/'),
-                              label: '',
+          child: SingleChildScrollView(
+            child: Observer(
+              builder: (_) {
+                return Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: 'E-mail',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                      ),
+                      controller: controller.emailController,
+                      keyboardType: TextInputType.text,
+                      onChanged: (val) => controller.setEmail(val),
+                      enabled: !controller.loading,
+                      validator: (val) => controller.emailValidator(val),
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        hintText: 'Senha',
+                      ),
+                      controller: controller.passwordController,
+                      keyboardType: TextInputType.text,
+                      onChanged: (val) => controller.setPassword(val),
+                      enabled: !controller.loading,
+                      validator: controller.passwordValidator,
+                      obscureText: true,
+                    ),
+                    SizedBox(height: 16.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        InkWell(
+                          child: Text(
+                            'Esqueci minha senha',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
                             ),
-                            backgroundColor: Colors.red[300],
                           ),
-                        );
-                      }
-                    },
-                  );
-                },
-              ),
-              SizedBox(height: 16.0),
-              Center(
-                child: InkWell(
-                  child: Text(
-                    'Registrar',
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                  onTap: () => Modular.to.pushReplacementNamed('/register'),
-                ),
-              ),
-            ],
+                          onTap: () async {
+                            if (controller.emailController.text.isEmpty) {
+                              _keyScaffold.currentState.showSnackBar(
+                                SnackBar(
+                                  content: Text('Insira seu e-mail para recuperar a senha!'),
+                                  duration: Duration(seconds: 2),
+                                  elevation: 0,
+                                ),
+                              );
+                            } else {
+                              await controller.auth.resetPassword(
+                                email: controller.emailController.text.trim(),
+                                onSuccess: onSuccessReset,
+                                onFail: onFailReset,
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),
+                    CustomButton(
+                      text: 'Entrar',
+                      onTab: () async {
+                        if (_formKey.currentState.validate()) {
+                          await controller.auth.signIn(
+                            email: controller.emailController.text.trim(),
+                            password: controller.passwordController.text.trim(),
+                            onSuccess: onSuccess,
+                            onFail: onFail,
+                          );
+                        }
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+                    Center(
+                      child: InkWell(
+                        child: Text(
+                          'Registrar',
+                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                        onTap: () => Modular.to.pushReplacementNamed('/register'),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  onSuccess() {
+    Modular.to.pushReplacementNamed('/home');
+  }
+
+  onFail() {
+    _keyScaffold.currentState.showSnackBar(
+      SnackBar(
+        content: Text('E-mail e/ou senha inválido!'),
+        duration: Duration(seconds: 2),
+        elevation: 0,
+        backgroundColor: Colors.red[300],
+      ),
+    );
+  }
+
+  onSuccessReset() {
+    Future.delayed(Duration(seconds: 3)).then((_) {
+      _keyScaffold.currentState.showSnackBar(SnackBar(
+        content: Text('Caso o e-mail exista, verifique a sua caixa de entrada!'),
+        duration: Duration(seconds: 3),
+        elevation: 0,
+      ));
+      Modular.to.pushReplacementNamed('/');
+    });
+  }
+
+  onFailReset() {
+    _keyScaffold.currentState.showSnackBar(
+      SnackBar(
+        content: Text('E-mail informado não cadastrado!'),
+        duration: Duration(seconds: 3),
+        elevation: 0,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
     );
   }

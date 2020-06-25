@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
+import 'package:portfolio/app/core/auth/auth_repository.dart';
+import 'package:portfolio/app/core/auth/auth_repository_interface.dart';
 
 part 'login_controller.g.dart';
 
 class LoginController = _LoginControllerStore with _$LoginController;
 
 abstract class _LoginControllerStore with Store {
+  AuthRepository auth = Modular.get<IAuthRepository>();
+
   @observable
   String email;
 
@@ -47,11 +51,18 @@ abstract class _LoginControllerStore with Store {
   String emailValidator(String value) {
     Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value)) {
+    if (!regex.hasMatch(value.trim())) {
       return 'Digite um e-mail válido!';
     } else {
       return null;
     }
+  }
+
+  @action
+  bool sendEmail(String email) {
+    // Enviar e-mail
+
+    return true;
   }
 
   @action
