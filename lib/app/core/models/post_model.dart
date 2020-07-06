@@ -24,8 +24,7 @@ class PostModel {
     return data;
   }
 
-  factory PostModel.fromJsonString(String str) =>
-      PostModel.fromJson(json.decode(str));
+  factory PostModel.fromJsonString(String str) => PostModel.fromJson(json.decode(str));
 
   String toJsonString() => json.encode(toJson());
 

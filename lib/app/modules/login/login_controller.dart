@@ -39,7 +39,7 @@ abstract class _LoginControllerStore with Store {
   bool loggedIn = false;
 
   @action
-  void togglePasswordVisibility() => passwordVisible = !passwordVisible;
+  bool togglePasswordVisibility() => passwordVisible = !passwordVisible;
 
   @action
   logoff() async {

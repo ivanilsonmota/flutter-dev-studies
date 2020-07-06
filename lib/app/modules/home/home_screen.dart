@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:portfolio/app/core/auth/auth_repository_interface.dart';
 import 'package:portfolio/app/modules/home/home_controller.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,10 +11,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends ModularState<HomeScreen, HomeController> {
+  var firebaseUser = Modular.get<IAuthRepository>();
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.black, statusBarIconBrightness: Brightness.light));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.black, statusBarIconBrightness: Brightness.light));
+
+    var user = firebaseUser.getCurrentUser().then((user) => user);
+    print(user);
 
     print(controller.getData());
     super.initState();
@@ -27,9 +31,12 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeController> {
         backgroundColor: Theme.of(context).primaryColor,
         actions: [
           IconButton(
-            icon: Icon(Icons.home),
-            onPressed: () => Modular.to.pushNamed('/'),
-          )
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              controller.authRepository.signOut();
+              Modular.to.pushReplacementNamed('/');
+            },
+          ),
         ],
       ),
       body: Container(
@@ -54,7 +61,7 @@ class _HomeScreenState extends ModularState<HomeScreen, HomeController> {
                       RaisedButton(
                         child: Container(
                           child: ListTile(
-                            onTap: () => Modular.to.pushNamed('/post'),
+                            onTap: () => Modular.to.pushNamed('/post', arguments: controller.postList[index]),
                             title: Text(
                               '${controller.postList[index].title}',
                             ),

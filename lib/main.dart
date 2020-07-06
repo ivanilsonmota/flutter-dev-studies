@@ -8,4 +8,5 @@ void main() async {
   var shared = await SharedPreferences.getInstance();
 
   runApp(ModularApp(module: AppModule(shared)));
+  
 }

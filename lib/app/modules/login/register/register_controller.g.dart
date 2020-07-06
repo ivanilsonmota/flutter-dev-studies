@@ -152,7 +152,7 @@ mixin _$RegisterController on _RegisterControllerBase, Store {
       ActionController(name: '_RegisterControllerBase');
 
   @override
-  void togglePasswordVisibility() {
+  bool togglePasswordVisibility() {
     final _$actionInfo = _$_RegisterControllerBaseActionController.startAction(
         name: '_RegisterControllerBase.togglePasswordVisibility');
     try {

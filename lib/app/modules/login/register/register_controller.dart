@@ -45,7 +45,7 @@ abstract class _RegisterControllerBase with Store {
   bool passwordVisible = false;
 
   @action
-  void togglePasswordVisibility() => passwordVisible = !passwordVisible;
+  bool togglePasswordVisibility() => passwordVisible = !passwordVisible;
 
   @action
   setName(val) => userName = val;

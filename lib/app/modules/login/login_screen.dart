@@ -48,7 +48,7 @@ class _LoginScreenState extends ModularState<LoginScreen, LoginController> {
                         ),
                       ),
                       controller: controller.emailController,
-                      keyboardType: TextInputType.text,
+                      keyboardType: TextInputType.emailAddress,
                       onChanged: (val) => controller.setEmail(val),
                       enabled: !controller.loading,
                       validator: (val) => controller.emailValidator(val),
@@ -60,13 +60,19 @@ class _LoginScreenState extends ModularState<LoginScreen, LoginController> {
                           borderRadius: BorderRadius.circular(16.0),
                         ),
                         hintText: 'Senha',
+                        suffixIcon: IconButton(
+                          icon: !controller.passwordVisible ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+                          onPressed: () {
+                            controller.togglePasswordVisibility();
+                          },
+                        ),
                       ),
                       controller: controller.passwordController,
                       keyboardType: TextInputType.text,
                       onChanged: (val) => controller.setPassword(val),
                       enabled: !controller.loading,
                       validator: controller.passwordValidator,
-                      obscureText: true,
+                      obscureText: !controller.passwordVisible,
                     ),
                     SizedBox(height: 16.0),
                     Row(
@@ -111,6 +117,7 @@ class _LoginScreenState extends ModularState<LoginScreen, LoginController> {
                             onSuccess: onSuccess,
                             onFail: onFail,
                           );
+                          await controller.auth.getCurrentUser();
                         }
                       },
                     ),

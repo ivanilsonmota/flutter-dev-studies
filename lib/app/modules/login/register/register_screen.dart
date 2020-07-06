@@ -11,111 +11,104 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends ModularState<RegisterScreen, RegisterController> {
   final _formValidatorKey = GlobalKey<FormState>();
-  final _keyScaffold = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    // final _screenWidth = MediaQuery.of(context).size.width;
-    // final _screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      key: _keyScaffold,
+      key: _scaffoldKey,
       appBar: AppBar(
-        automaticallyImplyLeading: true,
+        title: Text('Registrar'),
+        centerTitle: true,
         actions: [],
       ),
       body: SingleChildScrollView(
-        child: Observer(
-          builder: (ctx) {
-            return Form(
-              key: _formValidatorKey,
-              child: Padding(
-                padding: EdgeInsets.all(30.0),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: controller.nameController,
-                      decoration: InputDecoration(
-                        hintText: 'Nome completo',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
+        child: Form(
+          key: _formValidatorKey,
+          child: Padding(
+            padding: EdgeInsets.all(30.0),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: controller.nameController,
+                  decoration: InputDecoration(
+                    hintText: 'Nome completo',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                  ),
+                  obscureText: false,
+                  onChanged: controller.setName,
+                  enabled: true,
+                  validator: controller.nameValidator,
+                ),
+                SizedBox(height: 16.0),
+                TextFormField(
+                  controller: controller.emailController,
+                  decoration: InputDecoration(
+                    hintText: 'E-mail',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                  ),
+                  obscureText: false,
+                  keyboardType: TextInputType.emailAddress,
+                  onChanged: controller.setEmail,
+                  enabled: true,
+                  validator: (val) => controller.emailValidator(val),
+                ),
+                SizedBox(height: 16.0),
+                Observer(builder: (_) {
+                  return TextFormField(
+                    controller: controller.passwordController,
+                    decoration: InputDecoration(
+                      hintText: 'Senha',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.0),
                       ),
-                      obscureText: false,
-                      onChanged: controller.setName,
-                      enabled: true,
-                      validator: controller.nameValidator,
-                    ),
-                    SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: controller.emailController,
-                      decoration: InputDecoration(
-                        hintText: 'E-mail',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                      ),
-                      obscureText: false,
-                      onChanged: controller.setEmail,
-                      enabled: true,
-                      validator: (val) => controller.emailValidator(val),
-                    ),
-                    SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: controller.passwordController,
-                      decoration: InputDecoration(
-                        hintText: 'Password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                      ),
-                      obscureText: true,
-                      onChanged: controller.setPassowod,
-                      enabled: true,
-                      validator: controller.passwordValidator,
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
-                    SizedBox(
-                      height: 44.0,
-                      child: CustomButton(
-                        text: 'Registrar',
-                        onTab: () async {
-                          if (_formValidatorKey.currentState.validate()) {
-                            await controller.auth
-                                .signUp(email: controller.emailController.text.trim(), password: controller.passwordController.text.trim(), onSuccess: _onSuccess, onFail: _onFail);
-                          }
+                      suffixIcon: IconButton(
+                        icon: !controller.passwordVisible
+                            ? Icon(Icons.visibility)
+                            : Icon(
+                                Icons.visibility,
+                              ),
+                        onPressed: () {
+                          controller.togglePasswordVisibility();
                         },
                       ),
                     ),
-                  ],
+                    obscureText: !controller.passwordVisible,
+                    onChanged: controller.setPassowod,
+                    enabled: true,
+                    validator: controller.passwordValidator,
+                  );
+                }),
+                SizedBox(
+                  height: 16.0,
                 ),
-              ),
-            );
-          },
+                SizedBox(
+                  height: 44.0,
+                  child: CustomButton(
+                    text: 'Registrar',
+                    onTab: () async {
+                      if (_formValidatorKey.currentState.validate()) {
+                        Map<String, dynamic> userData = {
+                          "name": controller.nameController.text,
+                          "email": controller.emailController.text.trim(),
+                        };
+
+                        await controller.auth.signUp(
+                          userData: userData,
+                          password: controller.passwordController.text.trim(),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
-    );
-  }
-
-  _onSuccess() {
-    Future.delayed(Duration(seconds: 3)).then((_) {
-      _keyScaffold.currentState.showSnackBar(SnackBar(
-        content: Text('Registro efetuado com sucesso!'),
-        duration: Duration(seconds: 3),
-        elevation: 0,
-      ));
-      Modular.to.pushReplacementNamed('/');
-    });
-  }
-
-  _onFail() {
-    _keyScaffold.currentState.showSnackBar(
-      SnackBar(
-        content: Text('E-mail informado já utilizado!'),
-        duration: Duration(seconds: 2),
-        elevation: 0,
-        backgroundColor: Colors.red[300],
       ),
     );
   }

@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
+import 'package:portfolio/app/core/auth/auth_repository.dart';
+import 'package:portfolio/app/core/auth/auth_repository_interface.dart';
 import 'package:portfolio/app/core/models/post_model.dart';
 import 'package:portfolio/app/core/repositories/post_repository.dart';
 
@@ -8,8 +11,9 @@ part 'home_controller.g.dart';
 class HomeController = _HomeControllerStore with _$HomeController;
 
 abstract class _HomeControllerStore with Store {
-  var dio = Dio();
+  final IAuthRepository authRepository = Modular.get<AuthRepository>();
   final PostRepository postRepository;
+  var dio = Dio();
 
   _HomeControllerStore(this.postRepository) {
     getData();

@@ -150,7 +150,7 @@ mixin _$LoginController on _LoginControllerStore, Store {
   }
 
   @override
-  void togglePasswordVisibility() {
+  bool togglePasswordVisibility() {
     final _$actionInfo = _$_LoginControllerStoreActionController.startAction(
         name: '_LoginControllerStore.togglePasswordVisibility');
     try {
